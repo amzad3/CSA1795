@@ -1,0 +1,7 @@
+Parent(pam,bob).
+Parent(tom,bob).
+Parent(tom,liz).
+Parent(bob,ann).
+Parent(bob,pat).
+Parent(pat,jim).
+Give feedback
