@@ -1,67 +1,110 @@
-class Vaccum_Cleaner_problem:
+#INSTRUCTIONS
+#Enter LOCATION A/B in captial letters
+#Enter Status O/1 accordingly where 0 means CLEAN and 1 means DIRTY
 
-    def _init_(self, _location, _enviroment):
-        self.my_enviroment = _enviroment
-        self.location = _location
-        self.room_a_is_dirty = True
-        self.room_b_is_dirty = True
-        self.my_state = []
-        self.initialize(self.location)
+def vacuum_world():
+        # initializing goal_state
+        # 0 indicates Clean and 1 indicates Dirty
+    goal_state = {'A': '0', 'B': '0'}
+    cost = 0
 
-    def Run(self):
-        if self.my_state[1] == 'dirty':
-            self.clean(self.location)
-        elif self.location == "room-A":
-            self.go_right_room()
-        elif self.location == "room-B":
-            self.go_left_room()
+    location_input = input("Enter Location of Vacuum") #user_input of location vacuum is placed
+    status_input = input("Enter status of " + location_input) #user_input if location is dirty or clean
+    status_input_complement = input("Enter status of other room")
+    print("Initial Location Condition" + str(goal_state))
 
-    def clean(self, _location):
-        if _location == 'room-A':
-            self.my_enviroment[0] = [str(_location), 'clean']
-            self.room_a_is_dirty = False
-            self.my_state = [str(_location), 'clean']
-        if _location == 'room-B':
-            self.my_enviroment[1] = [str(_location), 'clean']
-            self.room_b_is_dirty = False
-            self.my_state = [str(_location), 'clean']
-        print(_location, "is cleaned.")
+    if location_input == 'A':
+        # Location A is Dirty.
+        print("Vacuum is placed in Location A")
+        if status_input == '1':
+            print("Location A is Dirty.")
+            # suck the dirt  and mark it as clean
+            goal_state['A'] = '0'
+            cost += 1                      #cost for suck
+            print("Cost for CLEANING A " + str(cost))
+            print("Location A has been Cleaned.")
 
-    def go_right_room(self):
-        self.room_a_is_dirty = False  
-        self.location = self.my_enviroment[1][0]  # 'room-B'
-        self.my_state = self.my_enviroment[1]
-        print("Room A was clean, therefore robot went to the right room.")
+            if status_input_complement == '1':
+                # if B is Dirty
+                print("Location B is Dirty.")
+                print("Moving right to the Location B. ")
+                cost += 1                       #cost for moving right
+                print("COST for moving RIGHT" + str(cost))
+                # suck the dirt and mark it as clean
+                goal_state['B'] = '0'
+                cost += 1                       #cost for suck
+                print("COST for SUCK " + str(cost))
+                print("Location B has been Cleaned. ")
+            else:
+                print("No action" + str(cost))
+                # suck and mark clean
+                print("Location B is already clean.")
 
-    def go_left_room(self):
-        self.room_b_is_dirty = False  
-        self.location = self.my_enviroment[0][0]  # 'room-A'
-        self.my_state = self.my_enviroment[0]
-        print("Room B was clean, therefore robot went to the left room.")
+        if status_input == '0':
+            print("Location A is already clean ")
+            if status_input_complement == '1':# if B is Dirty
+                print("Location B is Dirty.")
+                print("Moving RIGHT to the Location B. ")
+                cost += 1                       #cost for moving right
+                print("COST for moving RIGHT " + str(cost))
+                # suck the dirt and mark it as clean
+                goal_state['B'] = '0'
+                cost += 1                       #cost for suck
+                print("Cost for SUCK" + str(cost))
+                print("Location B has been Cleaned. ")
+            else:
+                print("No action " + str(cost))
+                print(cost)
+                # suck and mark clean
+                print("Location B is already clean.")
 
-    def initialize(self, _location):
-        for room in self.my_enviroment:
-            if room[0] == _location:
-                self.my_state = room
-        print("Robot is in the", self.my_state[0])
+    else:
+        print("Vacuum is placed in location B")
+        # Location B is Dirty.
+        if status_input == '1':
+            print("Location B is Dirty.")
+            # suck the dirt  and mark it as clean
+            goal_state['B'] = '0'
+            cost += 1  # cost for suck
+            print("COST for CLEANING " + str(cost))
+            print("Location B has been Cleaned.")
 
-    def Run_Until_Everywhere_Is_Clean(self):
-        while self.room_a_is_dirty or self.room_b_is_dirty:
-            self.Run()
-        print("Every room is clean.")
+            if status_input_complement == '1':
+                # if A is Dirty
+                print("Location A is Dirty.")
+                print("Moving LEFT to the Location A. ")
+                cost += 1  # cost for moving right
+                print("COST for moving LEFT" + str(cost))
+                # suck the dirt and mark it as clean
+                goal_state['A'] = '0'
+                cost += 1  # cost for suck
+                print("COST for SUCK " + str(cost))
+                print("Location A has been Cleaned.")
 
-    def Return_Enviroment(self):
-        return self.my_enviroment
+        else:
+            print(cost)
+            # suck and mark clean
+            print("Location B is already clean.")
+
+            if status_input_complement == '1':  # if A is Dirty
+                print("Location A is Dirty.")
+                print("Moving LEFT to the Location A. ")
+                cost += 1  # cost for moving right
+                print("COST for moving LEFT " + str(cost))
+                # suck the dirt and mark it as clean
+                goal_state['A'] = '0'
+                cost += 1  # cost for suck
+                print("Cost for SUCK " + str(cost))
+                print("Location A has been Cleaned. ")
+            else:
+                print("No action " + str(cost))
+                # suck and mark clean
+                print("Location A is already clean.")
+
+    # done cleaning
+    print("GOAL STATE: ")
+    print(goal_state)
+    print("Performance Measurement: " + str(cost))
 
 
-class main:
-    def _init_(self):
-        my_enviroment = [['room-A', 'dirty'], ['room-B', 'clean']]
-        location = 'room-A'
-        vaccum_cleaner = Vaccum_Cleaner_problem(location, my_enviroment)
-
-        
-        vaccum_cleaner.Run_Until_Everywhere_Is_Clean()
-
-
-main()
+vacuum_world()
